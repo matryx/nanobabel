@@ -20,6 +20,7 @@ void usage()
   std::cout << "    -h            Add hydrogen atoms" << std::endl;
   std::cout << "    -n steps      Specify the maximum number of steps (default=2500)" << std::endl;
   std::cout << "    -l steps      Specify the interval number of steps between structure updates" << std::endl;
+  std::cout << "    -dd PATH      Set the path for the data directory" << std::endl;
 }
 
 void start()
@@ -27,7 +28,6 @@ void start()
   // Load dummy format to force plugin load
   OpenBabel::OBConversion conv;
   OpenBabel::OBFormat *format_out = conv.FindFormat("pdb");
-  // log(std::string("datadir: ") + std::string(BABEL_DATADIR));
 }
 
 void runForcefields(int argc, char **argv)
