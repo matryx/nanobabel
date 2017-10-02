@@ -39,5 +39,8 @@ void debugBonds(OpenBabel::OBMol *mol);
 // Minimize.cpp
 void runMinimization(int argc, char **argv);
 
+// Constraints.cpp
+bool applyConstraints(OpenBabel::OBMol *mol, OpenBabel::OBFFConstraints *constraints, std::string constraintFileContent);
+
 #endif /* _NANOBABEL_H */
 

@@ -1,6 +1,6 @@
 
 #include "nanobabel.h"
-#include <stdlib.h>
+
 using namespace OpenBabel;
 
 class MinimizationContext
@@ -16,67 +16,6 @@ class MinimizationContext
     bool hydrogens;
     bool steepestDescent;
 };
-
-std::string constrainMinimizationResidueKey(std::string chainName, std::string residueName, int residueSerial)
-{
-  return chainName + ":" + residueName + ":" + toString(residueSerial);
-}
-
-bool constrainMinimization(OBMol *mol, OBFFConstraints *constraints, std::string content)
-{
-  // Read locked residues
-  std::map<std::string, bool> residuesLockeds;
-  std::vector<std::string> lines = split(content, '\n');
-  for (int i = 0; i < lines.size(); i++)
-  {
-    std::string line = lines[i];
-    std::vector<std::string> parts = split(line, ':');
-    if (parts.size() >= 1)
-    {
-      std::string type = parts[0];
-      if (type == "RESIDUE" && parts.size() >= 2)
-      {
-        std::string constraint = parts[1];
-        if (constraint == "FIXED" && parts.size() == 5)
-        {
-          std::string chainName = parts[2];
-          std::string residueName = parts[3];
-          int residueSerial = atoi(parts[4].c_str());
-          std::string residueKey = constrainMinimizationResidueKey(chainName, residueName, residueSerial);
-          residuesLockeds[residueKey] = true;
-          //log("Locking key: " + residueKey);
-        }
-      }
-    }
-  }
-  // Loop over which atoms should be locked
-  int constrained = 0;
-  // constraints->SetFactor(10);
-  for (OBAtomIterator aitr = mol->BeginAtoms(), aend = mol->EndAtoms(); aitr != aend; ++aitr)
-  {
-    OBAtom *atom = *aitr;
-    if (atom)
-    {
-      OBResidue *residue = atom->GetResidue();
-      if (residue)
-      {
-        std::string chainName = std::string(1, residue->GetChain());
-        std::string residueName = std::string(residue->GetName());
-        int residueSerial = residue->GetNum();
-        std::string residueKey = constrainMinimizationResidueKey(chainName, residueName, residueSerial);
-        //log("Testing key: " + residueKey);
-        if (residuesLockeds.count(residueKey) > 0)
-        {
-          constraints->AddAtomConstraint(atom->GetIdx());
-          constrained += 1;
-        }
-      }
-    }
-  }
-  // Done
-  log("Constrained: " + toString(constrained) + " of " + toString(mol->NumAtoms()) + " atoms");
-  return true;
-}
 
 void minimizationSetup(MinimizationContext context)
 {
@@ -190,7 +129,7 @@ void minimizationSetup(MinimizationContext context)
   if (context.file_ctx != "")
   {
     log("Setting up constraints");
-    if (!constrainMinimization(&mol, &constraints, ctx_str))
+    if (!applyConstraints(&mol, &constraints, ctx_str))
     {
       error("Could not setup constraints");
     }
@@ -219,7 +158,7 @@ void minimizationSetup(MinimizationContext context)
     // Update progress in console
     if (i % 10 == 0)
     {
-      log("Optimization progress: " + toString(i * 100 / context.steps) + "%" + " " + toString(pFF->Energy()));
+      log("Optimization progress: " + toString(i * 100 / context.steps) + "%," + " " + toString(pFF->Energy()) + "e");
     }
     i++;
     // Apply gradients
