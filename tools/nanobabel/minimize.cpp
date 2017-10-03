@@ -158,7 +158,7 @@ void minimizationSetup(MinimizationContext context)
     // Update progress in console
     if (i % 10 == 0)
     {
-      log("Optimization progress: " + toString(i * 100 / context.steps) + "%," + " " + toString(pFF->Energy()) + "e");
+      log("Optimization progress: " + toString(i * 100 / context.steps) + "%," + " " + toString(pFF->Energy()) + "E");
     }
     i++;
     // Apply gradients

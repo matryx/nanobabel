@@ -7,6 +7,7 @@ void usage()
   std::cout << std::endl;
   std::cout << "  action:" << std::endl;
   std::cout << "    MINIMIZE      Molecular energy minimization" << std::endl;
+  std::cout << "    CONVERT       Rewrite molecule file in a different format" << std::endl;
   std::cout << "    FORCEFIELDS   List supported forcefields" << std::endl;
   std::cout << "    FORMATS       List supported file formats" << std::endl;
   std::cout << "    PLUGINS       List supported plugins" << std::endl;
@@ -18,8 +19,14 @@ void usage()
   std::cout << "    -cx FILE      Forcefield constraints file" << std::endl;
   std::cout << "    -ff FFID      Select a forcefield (default=UFF)" << std::endl;
   std::cout << "    -h            Add hydrogen atoms" << std::endl;
-  std::cout << "    -n steps      Specify the maximum number of steps (default=2500)" << std::endl;
-  std::cout << "    -l steps      Specify the interval number of steps between structure updates" << std::endl;
+  std::cout << "    -n  steps     Specify the maximum number of steps (default=2500)" << std::endl;
+  std::cout << "    -l  steps     Specify the interval number of steps between structure updates" << std::endl;
+  std::cout << "    -dd PATH      Set the path for the data directory" << std::endl;
+  std::cout << std::endl;
+  std::cout << "  CONVERT options:" << std::endl;
+  std::cout << "    -i  FILE      Input file (default=input.pdb)" << std::endl;
+  std::cout << "    -o  FILE      Output file (default=output.pdb)" << std::endl;
+  std::cout << "    -h            Add hydrogen atoms" << std::endl;
   std::cout << "    -dd PATH      Set the path for the data directory" << std::endl;
 }
 
@@ -95,6 +102,12 @@ int main(int argc, char **argv)
   if (action == "MINIMIZE")
   {
     runMinimization(argc, argv);
+    return EXIT_SUCCESS;
+  }
+  // Minimization action
+  if (action == "CONVERT")
+  {
+    runConvert(argc, argv);
     return EXIT_SUCCESS;
   }
   // Forcefield action
