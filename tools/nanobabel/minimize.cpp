@@ -186,7 +186,7 @@ void minimizationSetup(MinimizationContext context)
       std::string step_output_str = conv_out.WriteString(&mol);
       log("Step update start: " + toString(i));
       std::cout << std::endl << step_output_str << std::endl;
-      log("Step update end:" + toString(i));
+      log("Step update end: " + toString(i));
     }
   }
   log("Optimization progress: " + toString(i * 100 / context.steps) + "%" + " " + toString(pFF->Energy()));

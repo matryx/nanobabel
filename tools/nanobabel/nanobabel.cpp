@@ -70,12 +70,6 @@ void runConfig(int argc, char **argv)
 void runPlugins(int argc, char **argv)
 {
   std::cout << std::endl;
-  /*
-  std::cout << "Available forcefields FFID:" << std::endl;
-  std::cout << OpenBabel::OBPlugin::ListAsString("forcefields") << std::endl;
-  std::cout << "Available file formats:" << std::endl;
-  std::cout << OpenBabel::OBPlugin::ListAsString("formats") << std::endl;
-  */
   std::cout << " - Available loaders:" << std::endl;
   std::cout << OpenBabel::OBPlugin::ListAsString("loaders") << std::endl;
   std::cout << " - Available charges:" << std::endl;
