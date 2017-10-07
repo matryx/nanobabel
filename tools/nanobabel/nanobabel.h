@@ -7,6 +7,8 @@
 #endif
 
 #include <cstdlib> // getenv
+#include <algorithm>
+#include <string>
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/base.h>
@@ -28,6 +30,7 @@ void writeFile(std::string filename, std::string content);
 std::string toString(int i);
 std::string toString(double i);
 std::string toString(char i);
+std::string toLower(std::string s);
 std::vector<std::string> split(const std::string &s, char delim);
 int setenv(const char *name, const char *value, int overwrite);
 
@@ -41,6 +44,9 @@ void runMinimization(int argc, char **argv);
 
 // Convert.cpp
 void runConvert(int argc, char **argv);
+
+// Bonding.cpp
+void runBonding(int argc, char **argv);
 
 // Constraints.cpp
 bool applyConstraints(OpenBabel::OBMol *mol, OpenBabel::OBFFConstraints *constraints, std::string constraintFileContent);

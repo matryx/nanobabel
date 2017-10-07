@@ -66,6 +66,13 @@ std::string toString(char i)
   return s;
 }
 
+std::string toLower(std::string s)
+{
+  std::string tmp = s;
+  std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::tolower);
+  return tmp;
+}
+
 template<typename Out>
 void split(const std::string &s, char delim, Out result)
 {

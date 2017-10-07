@@ -3,7 +3,7 @@
 
 using namespace OpenBabel;
 
-class ConvertContext
+class BondingContext
 {
   public:
     std::string data_dir;
@@ -12,7 +12,7 @@ class ConvertContext
     bool hydrogens;
 };
 
-void convertSetup(ConvertContext context)
+void bondingSetup(BondingContext context)
 {
   // Setting up data dir
   log("Setup environment");
@@ -61,7 +61,7 @@ void convertSetup(ConvertContext context)
   log("Checking");
   if (mol.Empty())
   {
-    error("Converted molecule is empty");
+    error("Bonded molecule is empty");
   }
   // Optionally add hydrogens
   if (context.hydrogens)
@@ -69,6 +69,8 @@ void convertSetup(ConvertContext context)
     log("Adding hydrogens");
     mol.AddHydrogens();
   }
+  mol.Kekulize();
+  debugBonds(&mol);
   // Write result
   std::string output_str = conv_out.WriteString(&mol);
   writeFile(context.file_output, output_str);
@@ -76,10 +78,10 @@ void convertSetup(ConvertContext context)
   log("Exiting");
 }
 
-void runConvert(int argc, char **argv)
+void runBonding(int argc, char **argv)
 {
   // Init context
-  ConvertContext context;
+  BondingContext context;
   context.data_dir = "";
   context.file_input = "input.pdb";
   context.file_output = "output.pdb";
@@ -112,6 +114,6 @@ void runConvert(int argc, char **argv)
       error("Unknown option: " + option);
     }
   }
-  // Run convert
-  convertSetup(context);
+  // Run bonding
+  bondingSetup(context);
 }

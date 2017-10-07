@@ -52,7 +52,41 @@ void debugBonds(OBMol *mol)
       int order = bond->GetBondOrder();
       int a1idx = a1->GetIndex();
       int a2idx = a2->GetIndex();
-      log("BondDebug: " + toString(order) + " atoms: " + toString(a1idx) + "->" + toString(a2idx));
+      if (bond->IsAromatic())
+      {
+      log("BondDebug: "
+        + toString(order)
+        + " ("
+        + toString(bond->IsAromatic())
+        + ","
+        //+ toString(bond->IsInRing())
+        //+ ","
+        //+ toString(bond->IsRotor())
+        //+ ","
+        //+ toString(bond->IsAmide())
+        //+ ","
+        //+ toString(bond->IsPrimaryAmide())
+        //+ ","
+        //+ toString(bond->IsSecondaryAmide())
+        //+ ","
+        //+ toString(bond->IsEster())
+        //+ ","
+        + toString(bond->IsSingle())
+        + ","
+        + toString(bond->IsDouble())
+        + ","
+        + toString(bond->IsTriple())
+        + ","
+        //+ toString(bond->IsCarbonyl())
+        //+ ","
+        //+ toString(bond->IsClosure())
+        //+ ","
+        + ")"
+        + " atoms: "
+        + toString(a1idx)
+        + "->"
+        + toString(a2idx));
+      }
     }
     i++;
   }
