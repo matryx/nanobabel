@@ -40,13 +40,16 @@ void debugAtoms(OpenBabel::OBMol *mol);
 void debugBonds(OpenBabel::OBMol *mol);
 
 // Minimize.cpp
-void runMinimization(int argc, char **argv);
+void runMinimize(int argc, char **argv);
 
 // Convert.cpp
 void runConvert(int argc, char **argv);
 
 // Bonding.cpp
 void runBonding(int argc, char **argv);
+
+// Hydrogen.cpp
+void runHydrogen(int argc, char **argv);
 
 // Constraints.cpp
 bool applyConstraints(OpenBabel::OBMol *mol, OpenBabel::OBFFConstraints *constraints, std::string constraintFileContent);

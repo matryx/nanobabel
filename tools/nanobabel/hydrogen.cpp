@@ -3,16 +3,17 @@
 
 using namespace OpenBabel;
 
-class BondingContext
+class HydrogenContext
 {
   public:
     std::string data_dir;
     std::string file_input;
     std::string file_output;
-    bool hydrogens;
+    bool addHydrogens;
+    bool deleteHydrogens;
 };
 
-void bondingSetup(BondingContext context)
+void hydrogenSetup(HydrogenContext context)
 {
   // Setting up data dir
   log("Setup environment");
@@ -63,14 +64,18 @@ void bondingSetup(BondingContext context)
   {
     error("Bonded molecule is empty");
   }
+  // Optionally delete hydrogens
+  if (context.deleteHydrogens)
+  {
+    log("Deleting hydrogens");
+    mol.DeleteHydrogens();
+  }
   // Optionally add hydrogens
-  if (context.hydrogens)
+  if (context.addHydrogens)
   {
     log("Adding hydrogens");
     mol.AddHydrogens();
   }
-  mol.Kekulize();
-  //debugBonds(&mol);
   // Write result
   std::string output_str = conv_out.WriteString(&mol);
   writeFile(context.file_output, output_str);
@@ -78,14 +83,15 @@ void bondingSetup(BondingContext context)
   log("Exiting");
 }
 
-void runBonding(int argc, char **argv)
+void runHydrogen(int argc, char **argv)
 {
   // Init context
-  BondingContext context;
+  HydrogenContext context;
   context.data_dir = "";
   context.file_input = "input.pdb";
   context.file_output = "output.pdb";
-  context.hydrogens = false;
+  context.addHydrogens = false;
+  context.deleteHydrogens = false;
   // Parse arguments
   for (int i = 2; i < argc; i++)
   {
@@ -105,15 +111,19 @@ void runBonding(int argc, char **argv)
       context.data_dir = std::string(argv[i + 1]);
       i++;
     }
-    else if (option == "-h")
+    else if (option == "-add")
     {
-      context.hydrogens = true;
+      context.addHydrogens = true;
+    }
+    else if (option == "-del")
+    {
+      context.deleteHydrogens = true;
     }
     else
     {
       error("Unknown option: " + option);
     }
   }
-  // Run bonding
-  bondingSetup(context);
+  // Run hydrogen
+  hydrogenSetup(context);
 }

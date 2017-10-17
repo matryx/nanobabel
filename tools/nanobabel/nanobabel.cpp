@@ -9,6 +9,7 @@ void usage()
   std::cout << "    minimize       Molecular energy minimization" << std::endl;
   std::cout << "    bonding        Compute bonding information of molecule" << std::endl;
   std::cout << "    convert        Rewrite molecule file in a different format" << std::endl;
+  std::cout << "    hydrogen       Add or remove hydrogens from a molecule file" << std::endl;
   std::cout << "    forcefields    List supported forcefields" << std::endl;
   std::cout << "    formats        List supported file formats" << std::endl;
   std::cout << "    descriptors    List supported descriptors" << std::endl;
@@ -37,11 +38,18 @@ void usage()
   std::cout << "    -h             Add hydrogen atoms" << std::endl;
   std::cout << "    -dd PATH       Set the path for the data directory" << std::endl;
   std::cout << std::endl;
+  std::cout << "  hydrogen options:" << std::endl;
+  std::cout << "    -i  FILE       Input file (default=input.pdb)" << std::endl;
+  std::cout << "    -o  FILE       Output file (default=output.pdb)" << std::endl;
+  std::cout << "    -add           Add hydrogen atoms" << std::endl;
+  std::cout << "    -del           Delete hydrogen atoms" << std::endl;
+  std::cout << "    -dd PATH       Set the path for the data directory" << std::endl;
+  std::cout << std::endl;
 }
 
 void start()
 {
-  // Load dummy format to force plugin load
+  // Load dummy format to force plugins load
   OpenBabel::OBConversion conv;
   OpenBabel::OBFormat *format_out = conv.FindFormat("pdb");
 }
@@ -58,22 +66,6 @@ void runFormats(int argc, char **argv)
   std::cout << std::endl;
   std::cout << " - Supported file formats:" << std::endl;
   std::cout << OpenBabel::OBPlugin::ListAsString("formats");
-}
-
-void runConfig(int argc, char **argv)
-{
-  std::cout << std::endl;
-  std::cout << " - Build BABEL_DATADIR:" << std::endl;
-  std::cout << BABEL_DATADIR << std::endl;
-  std::cout << std::endl;
-  std::cout << " - Build BABEL_VERSION:" << std::endl;
-  std::cout << BABEL_VERSION << std::endl;
-  std::cout << std::endl;
-  std::cout << " - Build MODULE_EXTENSION:" << std::endl;
-  std::cout << MODULE_EXTENSION << std::endl;
-  std::cout << std::endl;
-  std::cout << " - Environment BABEL_DATADIR:" << std::endl;
-  std::cout << getenv("BABEL_DATADIR") << std::endl;
 }
 
 void runDescriptors(int argc, char **argv)
@@ -94,6 +86,32 @@ void runPlugins(int argc, char **argv)
   std::cout << OpenBabel::OBPlugin::ListAsString("ops") << std::endl;
 }
 
+void runConfig(int argc, char **argv)
+{
+  // Build values
+  std::cout << std::endl;
+  std::cout << " - Build BABEL_DATADIR:" << std::endl;
+  std::cout << BABEL_DATADIR << std::endl;
+  std::cout << std::endl;
+  std::cout << " - Build BABEL_VERSION:" << std::endl;
+  std::cout << BABEL_VERSION << std::endl;
+  std::cout << std::endl;
+  std::cout << " - Build MODULE_EXTENSION:" << std::endl;
+  std::cout << MODULE_EXTENSION << std::endl;
+  std::cout << std::endl;
+  // Env values
+  std::cout << " - Environment BABEL_DATADIR:" << std::endl;
+  char *env_data = getenv("BABEL_DATADIR");
+  if (env_data != NULL)
+  {
+    std::cout << env_data << std::endl;
+  }
+  else
+  {
+    std::cout << "NOT SET" << std::endl;
+  }
+}
+
 int main(int argc, char **argv)
 {
   // Init lib
@@ -109,7 +127,7 @@ int main(int argc, char **argv)
   // Minimization action
   if (action == "minimize")
   {
-    runMinimization(argc, argv);
+    runMinimize(argc, argv);
     return EXIT_SUCCESS;
   }
   // Bonding action
@@ -122,6 +140,12 @@ int main(int argc, char **argv)
   if (action == "convert")
   {
     runConvert(argc, argv);
+    return EXIT_SUCCESS;
+  }
+  // Hydrogen action
+  if (action == "hydrogen")
+  {
+    runHydrogen(argc, argv);
     return EXIT_SUCCESS;
   }
   // Forcefield action

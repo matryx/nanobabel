@@ -3,7 +3,7 @@
 
 using namespace OpenBabel;
 
-class MinimizationContext
+class MinimizeContext
 {
   public:
     std::string data_dir;
@@ -17,7 +17,7 @@ class MinimizationContext
     bool steepestDescent;
 };
 
-void minimizationSetup(MinimizationContext context)
+void minimizeSetup(MinimizeContext context)
 {
   // Setting up data dir
   log("Setup environment");
@@ -108,22 +108,12 @@ void minimizationSetup(MinimizationContext context)
   {
     error("Miminized molecule is empty");
   }
-
-  //debugResidues(&mol);
-  //debugAtoms(&mol);
-  //debugBonds(&mol);
-
   // Optionally add hydrogens
   if (context.hydrogens)
   {
     log("Adding hydrogens");
     mol.AddHydrogens();
   }
-
-  //debugResidues(&mol);
-  //debugAtoms(&mol);
-  //debugBonds(&mol);
-
   // Setup constraints
   OBFFConstraints constraints;
   if (context.file_ctx != "")
@@ -199,10 +189,10 @@ void minimizationSetup(MinimizationContext context)
   log("Exiting");
 }
 
-void runMinimization(int argc, char **argv)
+void runMinimize(int argc, char **argv)
 {
   // Init context
-  MinimizationContext context;
+  MinimizeContext context;
   context.data_dir = "";
   context.steps = 2500;
   context.logSteps = -1;
@@ -265,5 +255,5 @@ void runMinimization(int argc, char **argv)
     }
   }
   // Run minimization
-  minimizationSetup(context);
+  minimizeSetup(context);
 }
