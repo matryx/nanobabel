@@ -33,9 +33,9 @@ void convertSetup(ConvertContext context)
   }
   if (!conv_in.SetInFormat(format_in))
   {
-    error("Input format not supported" + std::string(format_in->GetMIMEType()));
+    error("Input format not supported" + toString(format_in->GetID()));
   }
-  log("Using input format: " + std::string(format_in->GetMIMEType()));
+  log("Using input format: " + toString(format_in->GetID()));
   // Check output format
   if (!format_out)
   {
@@ -43,9 +43,9 @@ void convertSetup(ConvertContext context)
   }
   if (!conv_out.SetOutFormat(format_out))
   {
-    error("Output format not supported" + std::string(format_out->GetMIMEType()));
+    error("Output format not supported" + toString(format_out->GetID()));
   }
-  log("Using output format: " + std::string(format_out->GetMIMEType()));
+  log("Using output format: " + toString(format_out->GetID()));
   // I/O
   log("Preparing I/O");
   std::string input_str = readFile(context.file_input);
@@ -90,17 +90,17 @@ void runConvert(int argc, char **argv)
     std::string option(argv[i]);
     if (option == "-i" && (argc > (i + 1)))
     {
-      context.file_input = std::string(argv[i + 1]);
+      context.file_input = toString(argv[i + 1]);
       i++;
     }
     else if (option == "-o" && (argc > (i + 1)))
     {
-      context.file_output = std::string(argv[i + 1]);
+      context.file_output = toString(argv[i + 1]);
       i++;
     }
     else if (option == "-dd" && (argc > (i + 1)))
     {
-      context.data_dir = std::string(argv[i + 1]);
+      context.data_dir = toString(argv[i + 1]);
       i++;
     }
     else if (option == "-h")

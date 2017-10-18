@@ -27,6 +27,7 @@ void error(std::string line);
 void log(std::string line);
 std::string readFile(std::string filename);
 void writeFile(std::string filename, std::string content);
+std::string toString(char *i);
 std::string toString(int i);
 std::string toString(double i);
 std::string toString(char i);

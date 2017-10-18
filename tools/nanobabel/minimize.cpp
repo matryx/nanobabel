@@ -39,9 +39,9 @@ void minimizeSetup(MinimizeContext context)
   }
   if (!conv_in.SetInFormat(format_in))
   {
-    error("Input format not supported" + std::string(format_in->GetMIMEType()));
+    error("Input format not supported" + toString(format_in->GetID()));
   }
-  log("Using input format: " + std::string(format_in->GetMIMEType()));
+  log("Using input format: " + toString(format_in->GetID()));
   // Check output format
   if (!format_out)
   {
@@ -49,9 +49,9 @@ void minimizeSetup(MinimizeContext context)
   }
   if (!conv_out.SetOutFormat(format_out))
   {
-    error("Output format not supported" + std::string(format_out->GetMIMEType()));
+    error("Output format not supported" + toString(format_out->GetID()));
   }
-  log("Using output format: " + std::string(format_out->GetMIMEType()));
+  log("Using output format: " + toString(format_out->GetID()));
   // Find forcefield
   log("Loading forcefield: " + context.ffid);
   OBForceField* pFF = OBForceField::FindForceField(context.ffid);
@@ -73,8 +73,6 @@ void minimizeSetup(MinimizeContext context)
   {
     log("No constraint file specified");
   }
-  //std::string ctx_str = readFile(context.file_ctx);
-  //log("CtxFile: " + toString(ctx_str.length()));
   // Minimization setup
   log("Setup Minimization context");
   double crit = 1e-6;
@@ -208,22 +206,22 @@ void runMinimize(int argc, char **argv)
     std::string option(argv[i]);
     if (option == "-i" && (argc > (i + 1)))
     {
-      context.file_input = std::string(argv[i + 1]);
+      context.file_input = toString(argv[i + 1]);
       i++;
     }
     else if (option == "-o" && (argc > (i + 1)))
     {
-      context.file_output = std::string(argv[i + 1]);
+      context.file_output = toString(argv[i + 1]);
       i++;
     }
     else if (option == "-cx" && (argc > (i + 1)))
     {
-      context.file_ctx = std::string(argv[i + 1]);
+      context.file_ctx = toString(argv[i + 1]);
       i++;
     }
     else if (option == "-ff" && (argc > (i + 1)))
     {
-      context.ffid = std::string(argv[i + 1]);
+      context.ffid = toString(argv[i + 1]);
       i++;
     }
     else if (option == "-n" && (argc > (i + 1)))
@@ -238,7 +236,7 @@ void runMinimize(int argc, char **argv)
     }
     else if (option == "-dd" && (argc > (i + 1)))
     {
-      context.data_dir = std::string(argv[i + 1]);
+      context.data_dir = toString(argv[i + 1]);
       i++;
     }
     else if (option == "-h")

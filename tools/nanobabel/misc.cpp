@@ -39,6 +39,19 @@ void writeFile(std::string filename, std::string content)
   ofs.close();
 }
 
+std::string toString(char *i)
+{
+  if (i == NULL)
+  {
+    return "NULL";
+  }
+  std::string s;
+  std::stringstream out;
+  out << i;
+  s = out.str();
+  return s;
+}
+
 std::string toString(int i)
 {
   std::string s;
