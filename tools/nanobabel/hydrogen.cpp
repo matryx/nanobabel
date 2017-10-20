@@ -11,6 +11,7 @@ class HydrogenContext
     std::string file_output;
     bool addHydrogens;
     bool deleteHydrogens;
+    float ph;
 };
 
 void hydrogenSetup(HydrogenContext context)
@@ -74,7 +75,7 @@ void hydrogenSetup(HydrogenContext context)
   if (context.addHydrogens)
   {
     log("Adding hydrogens");
-    mol.AddHydrogens();
+    mol.AddHydrogens(false, true, context.ph);
   }
   // Write result
   log("Hydrogens updated");
@@ -93,6 +94,7 @@ void runHydrogen(int argc, char **argv)
   context.file_output = "output.pdb";
   context.addHydrogens = false;
   context.deleteHydrogens = false;
+  context.ph = 7.0;
   // Parse arguments
   for (int i = 2; i < argc; i++)
   {
@@ -110,6 +112,11 @@ void runHydrogen(int argc, char **argv)
     else if (option == "-dd" && (argc > (i + 1)))
     {
       context.data_dir = toString(argv[i + 1]);
+      i++;
+    }
+    else if (option == "-ph" && (argc > (i + 1)))
+    {
+      context.ph = atof(argv[i + 1]);
       i++;
     }
     else if (option == "-add")
