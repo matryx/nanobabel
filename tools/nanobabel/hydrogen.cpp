@@ -12,6 +12,7 @@ class HydrogenContext
     bool addHydrogens;
     bool deleteHydrogens;
     float ph;
+    bool onlyPolar;
 };
 
 void hydrogenSetup(HydrogenContext context)
@@ -75,7 +76,7 @@ void hydrogenSetup(HydrogenContext context)
   if (context.addHydrogens)
   {
     log("Adding hydrogens");
-    mol.AddHydrogens(false, true, context.ph);
+    mol.AddHydrogens(context.onlyPolar, true, context.ph);
   }
   // Write result
   log("Hydrogens updated");
@@ -94,6 +95,7 @@ void runHydrogen(int argc, char **argv)
   context.file_output = "output.pdb";
   context.addHydrogens = false;
   context.deleteHydrogens = false;
+  context.onlyPolar = false;
   context.ph = 7.0;
   // Parse arguments
   for (int i = 2; i < argc; i++)
@@ -119,13 +121,17 @@ void runHydrogen(int argc, char **argv)
       context.ph = atof(argv[i + 1]);
       i++;
     }
-    else if (option == "-add")
+    else if (option == "-add" || option == "--add")
     {
       context.addHydrogens = true;
     }
-    else if (option == "-del")
+    else if (option == "-del" || option == "--delete")
     {
       context.deleteHydrogens = true;
+    }
+    else if (option == "-pl" || option == "--polar")
+    {
+      context.onlyPolar = true;
     }
     else
     {

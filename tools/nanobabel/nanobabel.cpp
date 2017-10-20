@@ -41,9 +41,10 @@ void usage()
   std::cout << "  hydrogen options:" << std::endl;
   std::cout << "    -i   FILE       Input file (default=input.pdb)" << std::endl;
   std::cout << "    -o   FILE       Output file (default=output.pdb)" << std::endl;
+  std::cout << "    -ph  VALUE      Use a specific PH value for hydrogens (default=7.0)" << std::endl;
   std::cout << "    -add            Add hydrogen atoms" << std::endl;
   std::cout << "    -del            Delete hydrogen atoms" << std::endl;
-  std::cout << "    -ph  VALUE      Use a specific PH value for hydrogens (default=7.0)" << std::endl;
+  std::cout << "    -pl             Only add polar hydrogens atoms" << std::endl;
   std::cout << "    -dd  PATH       Set the path for the data directory" << std::endl;
   std::cout << std::endl;
 }
