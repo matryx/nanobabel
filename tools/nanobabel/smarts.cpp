@@ -3,16 +3,18 @@
 
 using namespace OpenBabel;
 
-class ConvertContext
+class SmartsContext
 {
   public:
     std::string data_dir;
     std::string file_input;
     std::string file_output;
+    std::string smarts_pattern;
     bool hydrogens;
+    bool unique;
 };
 
-void computeConvert(ConvertContext context)
+void computeSmarts(SmartsContext context)
 {
   // Setting up data dir
   log("Setup environment");
@@ -61,7 +63,7 @@ void computeConvert(ConvertContext context)
   log("Checking");
   if (mol.Empty())
   {
-    error("Converted molecule is empty");
+    error("SMARTS Filtered molecule is empty");
   }
   // Optionally add hydrogens
   if (context.hydrogens)
@@ -69,21 +71,61 @@ void computeConvert(ConvertContext context)
     log("Adding hydrogens");
     mol.AddHydrogens();
   }
+  // Apply SMARTS filter
+  OBSmartsPattern sp;
+  sp.Init(context.smarts_pattern);
+  sp.Match(mol);
+  vector<vector<int> > maplist;
+  if (context.unique)
+  {
+    maplist = sp.GetUMapList();
+  }
+  else
+  {
+    maplist = sp.GetMapList();
+  }
+  // Read SMARTS filter results
+  log("Smarts results");
+  vector<vector<int> >::iterator i;
+  vector<int>::iterator j;
+  for (i = maplist.begin(); i != maplist.end(); ++i)
+  {
+    for (j = i->begin(); j != i->end(); ++j)
+    {
+      std::cout << j << " ";
+    }
+    std::cout << endl;
+  }
+  // Build resulting OBMol
+  log("Building result molecule");
+  OBMol rmol;
+  rmol.Clear();
+  for (i = maplist.begin(); i != maplist.end(); ++i)
+  {
+    for (j = i->begin(); j != i->end(); ++j)
+    {
+      OBAtom *matched = mol.GetAtom(j);
+      rmol.AddAtom(*matched);
+    }
+  }
   // Write result
-  std::string output_str = conv_out.WriteString(&mol);
+  log("Smarts filtered");
+  std::string output_str = conv_out.WriteString(&rmol);
   writeFile(context.file_output, output_str);
   log("Wrote output file: " + context.file_output + " (" + toString(output_str.length() / 1024) + "kB)");
   log("Exiting");
 }
 
-void runConvert(int argc, char **argv)
+void runSmarts(int argc, char **argv)
 {
   // Init context
-  ConvertContext context;
+  SmartsContext context;
   context.data_dir = "";
   context.file_input = "input.pdb";
   context.file_output = "output.pdb";
+  context.smarts_pattern = "*";
   context.hydrogens = false;
+  context.unique = false;
   // Parse arguments
   for (int i = 2; i < argc; i++)
   {
@@ -103,15 +145,24 @@ void runConvert(int argc, char **argv)
       context.data_dir = toString(argv[i + 1]);
       i++;
     }
-    else if (option == "-h")
+    else if (option == "-s" && (argc > (i + 1)))
+    {
+      context.smarts_pattern = toString(argv[i + 1]);
+      i++;
+    }
+    else if (option == "-h" || option == "--hydrogen" || option == "--hydrogens")
     {
       context.hydrogens = true;
+    }
+    else if (option == "-u" || option == "--unique" || option == "--no-duplicate")
+    {
+      context.unique = true;
     }
     else
     {
       error("Unknown option: " + option);
     }
   }
-  // Run convert
-  computeConvert(context);
+  // Run Smarts
+  computeSmarts(context);
 }

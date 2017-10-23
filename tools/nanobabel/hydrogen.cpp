@@ -15,7 +15,7 @@ class HydrogenContext
     bool onlyPolar;
 };
 
-void hydrogenSetup(HydrogenContext context)
+void computeHydrogen(HydrogenContext context)
 {
   // Setting up data dir
   log("Setup environment");
@@ -64,7 +64,7 @@ void hydrogenSetup(HydrogenContext context)
   log("Checking");
   if (mol.Empty())
   {
-    error("Bonded molecule is empty");
+    error("Hydrogened molecule is empty");
   }
   // Optionally delete hydrogens
   if (context.deleteHydrogens)
@@ -139,5 +139,5 @@ void runHydrogen(int argc, char **argv)
     }
   }
   // Run hydrogen
-  hydrogenSetup(context);
+  computeHydrogen(context);
 }

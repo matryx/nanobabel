@@ -7,9 +7,10 @@ void usage()
   std::cout << std::endl;
   std::cout << "  all actions:" << std::endl;
   std::cout << "    minimize        Molecular energy minimization" << std::endl;
-  std::cout << "    bonding         Compute bonding information of molecule" << std::endl;
-  std::cout << "    convert         Rewrite molecule file in a different format" << std::endl;
-  std::cout << "    hydrogen        Add or remove hydrogens from a molecule file" << std::endl;
+  std::cout << "    bonding         Compute bonding information of a molecule" << std::endl;
+  std::cout << "    convert         Rewrite a molecule to different format" << std::endl;
+  std::cout << "    hydrogen        Add or remove hydrogens atoms to/from a molecule" << std::endl;
+  std::cout << "    smarts          Filter a molecule using SMARTS patterns" << std::endl;
   std::cout << "    forcefields     List supported forcefields" << std::endl;
   std::cout << "    formats         List supported file formats" << std::endl;
   std::cout << "    descriptors     List supported descriptors" << std::endl;
@@ -21,9 +22,9 @@ void usage()
   std::cout << "    -o   FILE       Output file (default=output.pdb)" << std::endl;
   std::cout << "    -cx  FILE       Forcefield constraints file" << std::endl;
   std::cout << "    -ff  FFID       Select a forcefield (default=UFF)" << std::endl;
-  std::cout << "    -h              Add hydrogen atoms" << std::endl;
-  std::cout << "    -n   steps      Specify the maximum number of steps (default=2500)" << std::endl;
-  std::cout << "    -l   steps      Specify the interval number of steps between structure updates" << std::endl;
+  std::cout << "    -n   STEPS      Specify the maximum number of steps (default=2500)" << std::endl;
+  std::cout << "    -l   STEPS      Specify the interval number of steps between structural dump" << std::endl;
+  std::cout << "    -h              Add hydrogen atoms before minimizing" << std::endl;
   std::cout << "    -dd  PATH       Set the path for the data directory" << std::endl;
   std::cout << std::endl;
   std::cout << "  bonding options:" << std::endl;
@@ -45,6 +46,14 @@ void usage()
   std::cout << "    -add            Add hydrogen atoms" << std::endl;
   std::cout << "    -del            Delete hydrogen atoms" << std::endl;
   std::cout << "    -pl             Only add polar hydrogens atoms" << std::endl;
+  std::cout << "    -dd  PATH       Set the path for the data directory" << std::endl;
+  std::cout << std::endl;
+  std::cout << "  smarts options:" << std::endl;
+  std::cout << "    -i   FILE       Input file (default=input.pdb)" << std::endl;
+  std::cout << "    -o   FILE       Output file (default=output.pdb)" << std::endl;
+  std::cout << "    -s   PATTERN    Specify the SMART pattern used (default=*)" << std::endl;
+  std::cout << "    -h              Add potentially missing hydrogen atoms before computation" << std::endl;
+  std::cout << "    -u              Only keep unique matches (no duplicates allowed)" << std::endl;
   std::cout << "    -dd  PATH       Set the path for the data directory" << std::endl;
   std::cout << std::endl;
 }
@@ -148,6 +157,12 @@ int main(int argc, char **argv)
   if (action == "hydrogen")
   {
     runHydrogen(argc, argv);
+    return EXIT_SUCCESS;
+  }
+  // Smarts action
+  if (action == "smarts")
+  {
+    runSmarts(argc, argv);
     return EXIT_SUCCESS;
   }
   // Forcefield action

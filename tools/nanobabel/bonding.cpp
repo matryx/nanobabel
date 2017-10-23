@@ -12,7 +12,7 @@ class BondingContext
     bool hydrogens;
 };
 
-void bondingSetup(BondingContext context)
+void computeBonding(BondingContext context)
 {
   // Setting up data dir
   log("Setup environment");
@@ -115,5 +115,5 @@ void runBonding(int argc, char **argv)
     }
   }
   // Run bonding
-  bondingSetup(context);
+  computeBonding(context);
 }
