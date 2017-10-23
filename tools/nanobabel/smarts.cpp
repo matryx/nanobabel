@@ -96,8 +96,8 @@ void computeSmarts(SmartsContext context)
     }
     std::cout << endl;
   }
-  log("Smarts filtered");
   // Build resulting OBMol
+  log("Smarts filtered");
   OBMol rmol;
   rmol.Clear();
   rmol.BeginModify();
