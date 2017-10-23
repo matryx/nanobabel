@@ -5,7 +5,7 @@ void usage()
 {
   std::cout << "Usage: nanobabel [action] [options]" << std::endl;
   std::cout << std::endl;
-  std::cout << "  all actions:" << std::endl;
+  std::cout << "  [action]:" << std::endl;
   std::cout << "    minimize        Molecular energy minimization" << std::endl;
   std::cout << "    bonding         Compute bonding information of a molecule" << std::endl;
   std::cout << "    convert         Rewrite a molecule to different format" << std::endl;
@@ -17,7 +17,7 @@ void usage()
   std::cout << "    plugins         List supported plugins" << std::endl;
   std::cout << "    config          Current configuration informations" << std::endl;
   std::cout << std::endl;
-  std::cout << "  minimize options:" << std::endl;
+  std::cout << "  minimize [options]:" << std::endl;
   std::cout << "    -i   FILE       Input file (default=input.pdb)" << std::endl;
   std::cout << "    -o   FILE       Output file (default=output.pdb)" << std::endl;
   std::cout << "    -cx  FILE       Forcefield constraints file" << std::endl;
@@ -27,19 +27,19 @@ void usage()
   std::cout << "    -h              Add hydrogen atoms before minimizing" << std::endl;
   std::cout << "    -dd  PATH       Set the path for the data directory" << std::endl;
   std::cout << std::endl;
-  std::cout << "  bonding options:" << std::endl;
+  std::cout << "  bonding [options]:" << std::endl;
   std::cout << "    -i   FILE       Input file (default=input.pdb)" << std::endl;
   std::cout << "    -o   FILE       Output file (default=output.pdb)" << std::endl;
   std::cout << "    -h              Add hydrogen atoms" << std::endl;
   std::cout << "    -dd  PATH       Set the path for the data directory" << std::endl;
   std::cout << std::endl;
-  std::cout << "  convert options:" << std::endl;
+  std::cout << "  convert [options]:" << std::endl;
   std::cout << "    -i   FILE       Input file (default=input.pdb)" << std::endl;
   std::cout << "    -o   FILE       Output file (default=output.pdb)" << std::endl;
   std::cout << "    -h              Add hydrogen atoms" << std::endl;
   std::cout << "    -dd  PATH       Set the path for the data directory" << std::endl;
   std::cout << std::endl;
-  std::cout << "  hydrogen options:" << std::endl;
+  std::cout << "  hydrogen [options]:" << std::endl;
   std::cout << "    -i   FILE       Input file (default=input.pdb)" << std::endl;
   std::cout << "    -o   FILE       Output file (default=output.pdb)" << std::endl;
   std::cout << "    -ph  VALUE      Use a specific PH value for hydrogens (default=7.0)" << std::endl;
@@ -48,7 +48,7 @@ void usage()
   std::cout << "    -pl             Only add polar hydrogens atoms" << std::endl;
   std::cout << "    -dd  PATH       Set the path for the data directory" << std::endl;
   std::cout << std::endl;
-  std::cout << "  smarts options:" << std::endl;
+  std::cout << "  smarts [options]:" << std::endl;
   std::cout << "    -i   FILE       Input file (default=input.pdb)" << std::endl;
   std::cout << "    -o   FILE       Output file (default=output.pdb)" << std::endl;
   std::cout << "    -s   PATTERN    Specify the SMART pattern used (default=*)" << std::endl;
