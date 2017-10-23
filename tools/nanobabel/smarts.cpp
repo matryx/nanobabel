@@ -96,8 +96,8 @@ void computeSmarts(SmartsContext context)
     }
     std::cout << endl;
   }
+  log("Smarts filtered");
   // Build resulting OBMol
-  log("Building result molecule");
   OBMol rmol;
   rmol.Clear();
   rmol.BeginModify();
@@ -111,7 +111,7 @@ void computeSmarts(SmartsContext context)
   }
   rmol.EndModify();
   // Write result
-  log("Smarts filtered");
+  log("Writing results");
   std::string output_str = conv_out.WriteString(&rmol);
   writeFile(context.file_output, output_str);
   log("Wrote output file: " + context.file_output + " (" + toString(output_str.length() / 1024) + "kB)");
@@ -147,7 +147,7 @@ void runSmarts(int argc, char **argv)
       context.data_dir = toString(argv[i + 1]);
       i++;
     }
-    else if (option == "-s" && (argc > (i + 1)))
+    else if ((option == "-s" || option == "--smarts") && (argc > (i + 1)))
     {
       context.smarts_pattern = toString(argv[i + 1]);
       i++;
