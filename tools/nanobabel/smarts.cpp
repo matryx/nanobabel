@@ -100,6 +100,7 @@ void computeSmarts(SmartsContext context)
   log("Building result molecule");
   OBMol rmol;
   rmol.Clear();
+  rmol.BeginModify();
   for (i = maplist.begin(); i != maplist.end(); ++i)
   {
     for (j = i->begin(); j != i->end(); ++j)
@@ -108,6 +109,7 @@ void computeSmarts(SmartsContext context)
       rmol.AddAtom(*matched);
     }
   }
+  rmol.EndModify();
   // Write result
   log("Smarts filtered");
   std::string output_str = conv_out.WriteString(&rmol);
