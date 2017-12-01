@@ -11,6 +11,7 @@ class HydrogenContext
     std::string file_output;
     bool addHydrogens;
     bool deleteHydrogens;
+    bool usePh;
     float ph;
     bool onlyPolar;
 };
@@ -76,7 +77,16 @@ void computeHydrogen(HydrogenContext context)
   if (context.addHydrogens)
   {
     log("Adding hydrogens");
-    mol.AddHydrogens(context.onlyPolar, true, context.ph);
+    if (context.usePh)
+    {
+      log("Correcting for ph");
+      mol.AddHydrogens(context.onlyPolar, true, context.ph);
+    }
+    else
+    {
+      log("Not correcting for ph");
+      mol.AddHydrogens();
+    }
   }
   // Write result
   log("Hydrogens updated");
@@ -96,6 +106,7 @@ void runHydrogen(int argc, char **argv)
   context.addHydrogens = false;
   context.deleteHydrogens = false;
   context.onlyPolar = false;
+  context.usePh = false;
   context.ph = 7.0;
   // Parse arguments
   for (int i = 2; i < argc; i++)
@@ -118,6 +129,7 @@ void runHydrogen(int argc, char **argv)
     }
     else if (option == "-ph" && (argc > (i + 1)))
     {
+      context.usePh = true;
       context.ph = atof(argv[i + 1]);
       i++;
     }

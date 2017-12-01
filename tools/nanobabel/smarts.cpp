@@ -16,6 +16,7 @@ class SmartsContext
 
 void computeSmarts(SmartsContext context)
 {
+  /*
   // Setting up data dir
   log("Setup environment");
   if (context.data_dir.length() > 0)
@@ -116,6 +117,7 @@ void computeSmarts(SmartsContext context)
   writeFile(context.file_output, output_str);
   log("Wrote output file: " + context.file_output + " (" + toString(output_str.length() / 1024) + "kB)");
   log("Exiting");
+  */
 }
 
 void runSmarts(int argc, char **argv)

@@ -70,9 +70,10 @@ void computeConvert(ConvertContext context)
     mol.AddHydrogens();
   }
   // Write result
+  log("Exporting molecule");
   std::string output_str = conv_out.WriteString(&mol);
+  log("Writing output file: " + context.file_output + " (" + toString(output_str.length() / 1024) + "kB)");
   writeFile(context.file_output, output_str);
-  log("Wrote output file: " + context.file_output + " (" + toString(output_str.length() / 1024) + "kB)");
   log("Exiting");
 }
 
