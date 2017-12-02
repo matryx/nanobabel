@@ -10,6 +10,7 @@ class BondingContext
     std::string file_input;
     std::string file_output;
     bool hydrogens;
+    bool fast;
 };
 
 void computeBonding(BondingContext context)
@@ -26,6 +27,13 @@ void computeBonding(BondingContext context)
   log("Detecting I/O formats");
   OBFormat *format_in = conv_in.FormatFromExt(context.file_input);
   OBFormat *format_out = conv_out.FormatFromExt(context.file_output);
+  // Add fast options for reading / writting
+  if (context.fast)
+  {
+    log("Setting fast option for read/write operations");
+    conv_in.AddOption("f", conv_in.INOPTIONS);
+    conv_out.AddOption("f", conv_out.OUTOPTIONS);
+  }
   // Check input format
   if (!format_in)
   {
@@ -69,12 +77,11 @@ void computeBonding(BondingContext context)
     log("Adding hydrogens");
     mol.AddHydrogens();
   }
-  mol.Kekulize();
-  //debugBonds(&mol);
   // Write result
+  log("Exporting molecule");
   std::string output_str = conv_out.WriteString(&mol);
+  log("Writing output file: " + context.file_output + " (" + toString(output_str.length() / 1024) + "kB)");
   writeFile(context.file_output, output_str);
-  log("Wrote output file: " + context.file_output + " (" + toString(output_str.length() / 1024) + "kB)");
   log("Exiting");
 }
 
@@ -86,6 +93,7 @@ void runBonding(int argc, char **argv)
   context.file_input = "input.pdb";
   context.file_output = "output.pdb";
   context.hydrogens = false;
+  context.fast = false;
   // Parse arguments
   for (int i = 2; i < argc; i++)
   {
@@ -108,6 +116,10 @@ void runBonding(int argc, char **argv)
     else if (option == "-h")
     {
       context.hydrogens = true;
+    }
+    else if (option == "-f")
+    {
+      context.fast = true;
     }
     else
     {

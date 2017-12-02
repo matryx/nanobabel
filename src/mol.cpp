@@ -3552,8 +3552,9 @@ namespace OpenBabel
     AssignSpinMultiplicity(true) is called at the end of the function. The true
     states that there are no implict hydrogens in the molecule.
   */
-  void OBMol::PerceiveBondOrders()
+  void OBMol::PerceiveBondOrders(bool fast)
   {
+
     if (Empty())
       return;
     if (_dimension != 3) return; // not useful on non-3D structures
@@ -3594,9 +3595,17 @@ namespace OpenBabel
     vector<int> path;
     double torsions = 0.0;
 
-    if (!HasSSSRPerceived())
-      FindSSSR();
-    rlist = GetSSSR();
+    if (!fast)
+    {
+      if (!HasSSSRPerceived())
+        FindSSSR();
+    }
+
+    if (!fast)
+    {
+      rlist = GetSSSR();
+    }
+
     for (ringit = rlist.begin(); ringit != rlist.end(); ++ringit)
       {
         if ((*ringit)->PathSize() == 5)
@@ -3672,7 +3681,11 @@ namespace OpenBabel
     //         to the canonical form
     //      Currently we have explicit code to do this, but a "bond typer"
     //      is in progress to make it simpler to test and debug.
-    bondtyper.AssignFunctionalGroupBonds(*this);
+
+    if (!fast)
+    {
+      bondtyper.AssignFunctionalGroupBonds(*this);
+    }
 
     // Pass 5: Check for aromatic rings and assign bonds as appropriate
     // This is just a quick and dirty approximation that marks everything

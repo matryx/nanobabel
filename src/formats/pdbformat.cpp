@@ -209,12 +209,20 @@ namespace OpenBabel
     vector<OBGenericData*> vbonds = mol.GetAllData(OBGenericDataType::VirtualBondData);
     mol.DeleteData(vbonds);
 
-
     if (!pConv->IsOption("b",OBConversion::INOPTIONS))
       mol.ConnectTheDots();
 
     if (!pConv->IsOption("s",OBConversion::INOPTIONS) && !pConv->IsOption("b",OBConversion::INOPTIONS))
-      mol.PerceiveBondOrders();
+    {
+      if (!pConv->IsOption("f",OBConversion::INOPTIONS))
+      {
+        mol.PerceiveBondOrders();
+      }
+      else
+      {
+        mol.PerceiveBondOrders(true); // Fast mode if option "f" is set
+      }
+    }
 
     // clean out remaining blank lines
     while(ifs.peek() != EOF && ifs.good() &&

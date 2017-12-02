@@ -686,7 +686,10 @@ namespace OpenBabel
       obErrorLog.ThrowError(__FUNCTION__, "No 2D or 3D coordinates exist. Any stereochemical information will"
       " be lost. To generate 2D or 3D coordinates use --gen2D or --gen3d.", obWarning, onceOnly);
 
-    PerceiveStereo(&mol);
+    if (!pConv->IsOption("f", pConv->OUTOPTIONS))
+    {
+      PerceiveStereo(&mol);
+    }
 
     if (pConv->GetOutputIndex()==1)
       HasProperties = false;
@@ -1184,6 +1187,7 @@ namespace OpenBabel
   //////////////////////////////////////////////////////////
   bool MDLFormat::WriteV3000(ostream& ofs,OBMol& mol, OBConversion* pConv)
   {
+
     // Check to see if there are any untyped aromatic bonds (GetBO == 5)
     // These must be kekulized first
     FOR_BONDS_OF_MOL(b, mol)
@@ -1195,11 +1199,19 @@ namespace OpenBabel
           }
       }
 
-
     ofs << "  0  0  0     0  0            999 V3000" << endl; //line 4
     ofs << "M  V30 BEGIN CTAB" <<endl;
-    ofs << "M  V30 COUNTS " << mol.NumAtoms() << " " << mol.NumBonds()
-        << " 0 0 " << mol.IsChiral() << endl;
+
+    if (!pConv->IsOption("f", pConv->OUTOPTIONS))
+    {
+      ofs << "M  V30 COUNTS " << mol.NumAtoms() << " " << mol.NumBonds()
+          << " 0 0 " << mol.IsChiral() << endl;
+    }
+    else
+    {
+      ofs << "M  V30 COUNTS " << mol.NumAtoms() << " " << mol.NumBonds()
+          << " 0 0 " << 0 << endl;
+    }
 
     ofs << "M  V30 BEGIN ATOM" <<endl;
     OBAtom *atom;

@@ -533,7 +533,7 @@ namespace OpenBabel
     //! Adds single bonds based on atom proximity
     void ConnectTheDots();
     //! Attempts to perceive multiple bonds based on geometries
-    void PerceiveBondOrders();
+    void PerceiveBondOrders(bool fast = false);
     //! Fills out an OBAngleData with angles from the molecule
     void FindAngles();
     //! Fills out an OBTorsionData with angles from the molecule
