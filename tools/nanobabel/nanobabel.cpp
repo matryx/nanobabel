@@ -10,6 +10,7 @@ void usage()
   std::cout << "    bonding         Compute bonding information of a molecule" << std::endl;
   std::cout << "    convert         Rewrite a molecule to different format" << std::endl;
   std::cout << "    hydrogen        Add or remove hydrogens atoms to/from a molecule" << std::endl;
+  std::cout << "    energy          Run energy scoring on molecule" << std::endl;
   std::cout << "    smarts          Filter a molecule using SMARTS patterns" << std::endl;
   std::cout << "    forcefields     List supported forcefields" << std::endl;
   std::cout << "    formats         List supported file formats" << std::endl;
@@ -24,6 +25,7 @@ void usage()
   std::cout << "    -ff  FFID       Select a forcefield (default=UFF)" << std::endl;
   std::cout << "    -n   STEPS      Specify the maximum number of steps (default=2500)" << std::endl;
   std::cout << "    -l   STEPS      Specify the interval number of steps between structural dump" << std::endl;
+  std::cout << "    -e              Specify if we need to display energy steps" << std::endl;
   std::cout << "    -h              Add hydrogen atoms before minimizing" << std::endl;
   std::cout << "    -dd  PATH       Set the path for the data directory" << std::endl;
   std::cout << std::endl;
@@ -36,6 +38,12 @@ void usage()
   std::cout << "  convert [options]:" << std::endl;
   std::cout << "    -i   FILE       Input file (default=input.pdb)" << std::endl;
   std::cout << "    -o   FILE       Output file (default=output.pdb)" << std::endl;
+  std::cout << "    -h              Add hydrogen atoms" << std::endl;
+  std::cout << "    -dd  PATH       Set the path for the data directory" << std::endl;
+  std::cout << std::endl;
+  std::cout << "  energy [options]:" << std::endl;
+  std::cout << "    -i   FILE       Input file (default=input.pdb)" << std::endl;
+  std::cout << "    -ff  FFID       Select a forcefield (default=UFF)" << std::endl;
   std::cout << "    -h              Add hydrogen atoms" << std::endl;
   std::cout << "    -dd  PATH       Set the path for the data directory" << std::endl;
   std::cout << std::endl;
@@ -157,6 +165,12 @@ int main(int argc, char **argv)
   if (action == "hydrogen")
   {
     runHydrogen(argc, argv);
+    return EXIT_SUCCESS;
+  }
+  // Energy action
+  if (action == "energy")
+  {
+    runEnergy(argc, argv);
     return EXIT_SUCCESS;
   }
   // Smarts action

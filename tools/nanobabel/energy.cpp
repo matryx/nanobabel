@@ -3,17 +3,16 @@
 
 using namespace OpenBabel;
 
-class BondingContext
+class EnergyContext
 {
   public:
     std::string data_dir;
     std::string file_input;
-    std::string file_output;
+    std::string ffid;
     bool hydrogens;
-    bool fast;
 };
 
-void computeBonding(BondingContext context)
+void energySetup(EnergyContext context)
 {
   // Setting up data dir
   log("Setup environment");
@@ -21,20 +20,11 @@ void computeBonding(BondingContext context)
   {
     setenv("BABEL_DATADIR", context.data_dir.c_str(), 1);
   }
+  log("Energy starting");
   // Find filetype
   OBConversion conv_in;
-  OBConversion conv_out;
   log("Detecting I/O formats");
   OBFormat *format_in = conv_in.FormatFromExt(context.file_input);
-  OBFormat *format_out = conv_out.FormatFromExt(context.file_output);
-  // Add fast options for reading / writting
-  if (context.fast)
-  {
-    log("Setting fast option for read/write operations");
-    conv_in.AddOption("s", conv_in.INOPTIONS);
-    conv_in.AddOption("f", conv_in.INOPTIONS);
-    conv_out.AddOption("f", conv_out.OUTOPTIONS);
-  }
   // Check input format
   if (!format_in)
   {
@@ -45,20 +35,37 @@ void computeBonding(BondingContext context)
     error("Input format not supported" + toString(format_in->GetID()));
   }
   log("Using input format: " + toString(format_in->GetID()));
-  // Check output format
-  if (!format_out)
+  // Find forcefield
+  log("Loading forcefield: " + context.ffid);
+  OBForceField* pFF = OBForceField::FindForceField(context.ffid);
+  if (!pFF)
   {
-    error("Unrecognized output format: " + context.file_output);
+    error("Could not find forcefield: " + context.ffid);
   }
-  if (!conv_out.SetOutFormat(format_out))
-  {
-    error("Output format not supported" + toString(format_out->GetID()));
-  }
-  log("Using output format: " + toString(format_out->GetID()));
   // I/O
   log("Preparing I/O");
   std::string input_str = readFile(context.file_input);
   log("Read input file: " + context.file_input + " (" + toString(input_str.length() / 1024) + "kB)");
+  // Energy setup
+  log("Setup Energy context");
+  double crit = 1e-6;
+  bool sd = true;
+  double rvdw = 6.0;
+  double rele = 10.0;
+  bool newton = false;
+  int freq = 10;
+  bool cut = false;
+  pFF->SetLogFile(&std::cerr);
+  pFF->SetLogLevel(OBFF_LOGLVL_NONE);
+  pFF->SetVDWCutOff(rvdw);
+  pFF->SetElectrostaticCutOff(rele);
+  pFF->SetUpdateFrequency(freq);
+  pFF->EnableCutOff(cut);
+  if (newton)
+  {
+    pFF->SetLineSearchType(LineSearchType::Newton2Num);
+  }
+  log("Energy ready");
   // Load mol
   OBMol mol;
   mol.Clear();
@@ -70,7 +77,7 @@ void computeBonding(BondingContext context)
   log("Checking");
   if (mol.Empty())
   {
-    error("Bonded molecule is empty");
+    error("Energy rated molecule is empty");
   }
   // Optionally add hydrogens
   if (context.hydrogens)
@@ -78,23 +85,29 @@ void computeBonding(BondingContext context)
     log("Adding hydrogens");
     mol.AddHydrogens();
   }
+  // Setup forcefield
+  log("Setup forcefield");
+  if (!pFF->Setup(mol))
+  {
+    error("Could not setup force field.");
+  }
+  // Read energy
+  log("Read energy");
+  double energy = pFF->Energy();
+  log("Energy result: " + toString(energy));
   // Write result
-  log("Exporting molecule");
-  std::string output_str = conv_out.WriteString(&mol);
-  log("Writing output file: " + context.file_output + " (" + toString(output_str.length() / 1024) + "kB)");
-  writeFile(context.file_output, output_str);
+  log("Energy done");
   log("Exiting");
 }
 
-void runBonding(int argc, char **argv)
+void runEnergy(int argc, char **argv)
 {
   // Init context
-  BondingContext context;
+  EnergyContext context;
   context.data_dir = "";
+  context.ffid = "UFF";
   context.file_input = "input.pdb";
-  context.file_output = "output.pdb";
   context.hydrogens = false;
-  context.fast = false;
   // Parse arguments
   for (int i = 2; i < argc; i++)
   {
@@ -104,9 +117,9 @@ void runBonding(int argc, char **argv)
       context.file_input = toString(argv[i + 1]);
       i++;
     }
-    else if (option == "-o" && (argc > (i + 1)))
+    else if (option == "-ff" && (argc > (i + 1)))
     {
-      context.file_output = toString(argv[i + 1]);
+      context.ffid = toString(argv[i + 1]);
       i++;
     }
     else if (option == "-dd" && (argc > (i + 1)))
@@ -118,15 +131,11 @@ void runBonding(int argc, char **argv)
     {
       context.hydrogens = true;
     }
-    else if (option == "-f")
-    {
-      context.fast = true;
-    }
     else
     {
       error("Unknown option: " + option);
     }
   }
-  // Run bonding
-  computeBonding(context);
+  // Run Energy
+  energySetup(context);
 }

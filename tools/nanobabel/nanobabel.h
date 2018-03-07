@@ -47,6 +47,8 @@ void runConvert(int argc, char **argv);
 // Bonding.cpp
 void runBonding(int argc, char **argv);
 // Hydrogen.cpp
+void runEnergy(int argc, char **argv);
+// Hydrogen.cpp
 void runHydrogen(int argc, char **argv);
 // Smarts.cpp
 void runSmarts(int argc, char **argv);

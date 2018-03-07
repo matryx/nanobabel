@@ -15,6 +15,7 @@ class MinimizeContext
     int steps;
     bool hydrogens;
     bool steepestDescent;
+    bool logEnergy;
 };
 
 void minimizeSetup(MinimizeContext context)
@@ -175,6 +176,11 @@ void minimizeSetup(MinimizeContext context)
       log("Step update start: " + toString(i));
       std::cout << std::endl << step_output_str << std::endl;
       log("Step update end: " + toString(i));
+      if (context.logEnergy)
+      {
+        double energy = pFF->Energy();
+        log("Energy update: " + toString(energy));
+      }
     }
   }
   log("Optimization progress: " + toString(i * 100 / context.steps) + "%" + " " + toString(pFF->Energy()));
@@ -246,6 +252,10 @@ void runMinimize(int argc, char **argv)
     else if (option == "-sd")
     {
       context.steepestDescent = true;
+    }
+    else if (option == "-e")
+    {
+      context.logEnergy = true;
     }
     else
     {
