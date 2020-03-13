@@ -1,4 +1,3 @@
-
 #include "nanobabel.h"
 
 void error(std::string line)
@@ -105,17 +104,17 @@ std::vector<std::string> split(const std::string &s, char delim)
     return elems;
 }
 
-int setenv(const char *name, const char *value, int overwrite)
+int setenv(const char *name, const char *value, int overwrite) throw()
 {
-    int errcode = 0;
+    char* envVar = 0;
     if(!overwrite)
     {
         size_t envsize = 0;
-        errcode = getenv_s(&envsize, NULL, 0, name);
-        if (errcode || envsize)
+        envVar = getenv(name);
+        if (envVar == (char*)0)
         {
-          return errcode;
+          return -1;
         }
     }
-    return _putenv_s(name, value);
+    return setenv(name, value, 1);
 }

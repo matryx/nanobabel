@@ -21,6 +21,6 @@ RUN mkdir build
 WORKDIR /obabel/build/
 
 RUN cmake /obabel -DCMAKE_CXX_COMPILER=g++-4.8 -Wno-dev
-RUN make -j4
+RUN make -j4 && make install
 
 CMD tail -f /dev/null
