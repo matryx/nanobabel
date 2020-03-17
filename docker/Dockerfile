@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-RUN apt-get update -y && apt-get clean -y && apt-get upgrade -y
+RUN apt-get update -y && apt-get clean -y
 RUN apt-get install -y software-properties-common && apt-get update
 RUN apt-get install -y cmake
 RUN apt-get install -y gcc-4.8 && apt-get install -y g++-4.8
