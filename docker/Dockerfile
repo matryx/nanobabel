@@ -23,7 +23,11 @@ RUN cmake .. -DCMAKE_INSTALL_PREFIX=/obabel/install -Wno-dev &&\
 
 FROM debian:10
 
-RUN apt-get update && apt-get -y install --no-install-recommends libxml2-dev
+RUN apt-get update && apt-get -y install --no-install-recommends\
+  libxml2-dev\
+  python3\
+  python3-pip &&\
+  apt-get clean -y
 
 COPY --from=0 /obabel/install /obabel/install
 WORKDIR /obabel/install
