@@ -1,26 +1,29 @@
-FROM ubuntu:16.04
+FROM debian:8
 
-RUN apt-get update -y && apt-get clean -y
-RUN apt-get install -y software-properties-common && apt-get update
-RUN apt-get install -y cmake
-RUN apt-get install -y gcc-4.8 && apt-get install -y g++-4.8
-RUN apt-get install -y libxml2-dev
-RUN apt-get install -y zlib1g-dev
-RUN apt-get install -y libeigen2-dev
-RUN apt-get install -y libcairo2-dev
+RUN apt-get update && apt-get -y install --no-install-recommends\
+  build-essential\
+  cmake\
+  zlib1g-dev\
+  libbz2-dev\
+  libeigen2-dev\
+  libxml2-dev &&\
+  apt-get clean -y
 
-
-COPY . /obabel
 WORKDIR /obabel
-
-RUN chmod +x ./libin*
-RUN dpkg -i libinchi1_1.03+dfsg-2_amd64.deb
-RUN dpkg -i libinchi-dev_1.03+dfsg-2_amd64.deb
+COPY . .
 
 RUN mkdir build
-WORKDIR /obabel/build/
+WORKDIR /obabel/build
 
-RUN cmake /obabel -DCMAKE_CXX_COMPILER=g++-4.8 -Wno-dev
-RUN make -j4 && make install
+RUN cmake .. -DCMAKE_INSTALL_PREFIX=/obabel/install -Wno-dev &&\
+  nproc=$(getconf _NPROCESSORS_ONLN) &&\
+  make -j $(( nproc > 2 ? nproc - 2 : 1 )) &&\
+  make install
 
-CMD tail -f /dev/null
+
+FROM debian:10
+
+RUN apt-get update && apt-get -y install --no-install-recommends libxml2-dev
+
+COPY --from=0 /obabel/install /obabel/install
+WORKDIR /obabel/install
