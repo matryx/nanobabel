@@ -9,13 +9,12 @@ RUN apt-get update && apt-get -y install --no-install-recommends\
   libxml2-dev &&\
   apt-get clean -y
 
-WORKDIR /obabel
+WORKDIR /root/nanobabel
 COPY . .
 
-RUN mkdir build
-WORKDIR /obabel/build
+WORKDIR /root/nanobabel/build
 
-RUN cmake .. -DCMAKE_INSTALL_PREFIX=/obabel/install -Wno-dev &&\
+RUN cmake .. -DCMAKE_INSTALL_PREFIX=/nanobabel -Wno-dev &&\
   nproc=$(getconf _NPROCESSORS_ONLN) &&\
   make -j $(( nproc > 2 ? nproc - 2 : 1 )) &&\
   make install
@@ -29,5 +28,5 @@ RUN apt-get update && apt-get -y install --no-install-recommends\
   python3-pip &&\
   apt-get clean -y
 
-COPY --from=0 /obabel/install /obabel/install
-WORKDIR /obabel/install
+COPY --from=0 /nanobabel /nanobabel
+ENV PATH="/nanobabel/bin:$PATH"
