@@ -103,18 +103,3 @@ std::vector<std::string> split(const std::string &s, char delim)
     split(s, delim, std::back_inserter(elems));
     return elems;
 }
-
-int setenv(const char *name, const char *value, int overwrite) throw()
-{
-    char* envVar = 0;
-    if(!overwrite)
-    {
-        size_t envsize = 0;
-        envVar = getenv(name);
-        if (envVar == (char*)0)
-        {
-          return -1;
-        }
-    }
-    return setenv(name, value, 1);
-}

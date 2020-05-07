@@ -29,4 +29,8 @@ RUN apt-get update && apt-get -y install --no-install-recommends\
   apt-get clean -y
 
 COPY --from=0 /nanobabel /nanobabel
+COPY --from=0 /root/nanobabel/data /nanobabel/data
+
 ENV PATH="/nanobabel/bin:$PATH"
+ENV NANOBABEL="/nanobabel/bin"
+ENV BABEL_DATADIR="/nanobabel/data"

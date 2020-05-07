@@ -33,7 +33,6 @@ std::string toString(double i);
 std::string toString(char i);
 std::string toLower(std::string s);
 std::vector<std::string> split(const std::string &s, char delim);
-int setenv(const char *name, const char *value, int overwrite);
 
 // Debug.cpp
 void debugResidues(OpenBabel::OBMol *mol);
